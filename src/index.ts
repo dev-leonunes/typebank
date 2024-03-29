@@ -1,14 +1,19 @@
 import 'dotenv/config'
 import express from 'express';
 import userRouter from './routes/userRouter';
+import { AppDataSource } from './data-source';
 
-const app = express();
-app.use(express.json());
+AppDataSource.initialize().then(() => {
+    const app = express();
+    app.use(express.json());
 
-app.use(userRouter);
+    app.use(userRouter);
 
-const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
-    console.log(`Listening ${port}`)
+    return app.listen(port, () => {
+        console.log(`Listening ${port}`)
+    })
+}).catch((error) => {
+    console.log(error);
 });
